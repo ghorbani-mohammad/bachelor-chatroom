@@ -13,9 +13,7 @@ except:
 clientSocket.connect((serverName,serverPort))
 clientSocket.sendto(bytes([num_lines]),(serverName, serverPort))#Saying Number Of Lines To Server
 for line in myFile:
-    print(line,end='')
     clientSocket.sendto(line.encode('utf-8'),(serverName, serverPort))
-    print(line,end='')
 modifiedSentence=clientSocket.recv(1024)
 print ('From Server:',modifiedSentence)
 clientSocket.close()
