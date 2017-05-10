@@ -1,9 +1,29 @@
 from socket import *
+import _thread
+
+def Get_File(fileName):
+    print('Thread with file name:'+fileName)
+    ftpconnectionSocket, addr=ftpServer.accept()
+    data = ftpconnectionSocket.recv(1024)
+    print(data.decode())
+    myFile=open(fileName,"wb+")
+    myFile.write(data)
+    myFile.close()
+    ftpconnectionSocket.send((fileName+" Uploaded By ").encode())
+    ftpconnectionSocket.close()
+    print('Successfully Getting Information')
+
 serverPort=12000
 serverSocket=socket(AF_INET,SOCK_STREAM)
 serverSocket.bind(('',serverPort))
+serverSocket.listen(1)
+
+ftpServerPort=12001
+ftpServer=socket(AF_INET,SOCK_STREAM)
+ftpServer.bind(('',ftpServerPort))
+ftpServer.listen(1)
+
 print ('The server is ready to receive')
-serverSocket.listen(10)
 connectionSocket, addr=serverSocket.accept()
 print ('Connection From Ip:'+str(addr)+' Is Accepted')
 while 1:
@@ -19,17 +39,14 @@ while 1:
         capitalizedSentence=sentence.upper()
         capitalizedSentence=capitalizedSentence.encode('utf-8')
         connectionSocket.send(capitalizedSentence)
-    elif sentence=='f':
+    elif sentence=='f':            
+        print("File Coming...")
+        fileName=connectionSocket.recv(1024)
+        fileName=fileName.decode()
+        print(fileName)
         try:
-            print("File Coming...")
-            fileName=connectionSocket.recv(1024)
-            fileName=fileName.decode()
-            print(fileName+"\n")
-            numLines=connectionSocket.recv(1024)
-            numLines=int.from_bytes(numLines,byteorder='little')
-            print("\n"+numLines)
-            myFile=open("info.txt","w")
-            print("Create File")
+            _thread.start_new_thread(Get_File,(fileName,))
+            print("Thread Created")
         except:
-            connectionSocket.close()
+            print("Unable To Start New Thread")
 connectionSocket.close()

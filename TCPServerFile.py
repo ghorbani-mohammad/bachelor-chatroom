@@ -6,13 +6,16 @@ serverSocket.listen(1)
 print ('The server is ready to receive')
 while 1:
     connectionSocket, addr=serverSocket.accept()
-    num_lines=connectionSocket.recv(1024)
-    num_lines=int.from_bytes(num_lines,byteorder='little')
-    myFile=open("file.txt","w")
-    for i in range(num_lines):
-        print('Waiting To Recieve Line'+ str(i))
-        sentence=connectionSocket.recv(1024)
-        print(sentence)
-        myFile.write(sentence+"\n")
+    print("File Coming...")
+    myFile=open("info.txt","wb")
+    while True:
+        print('receiving data...')
+        data = connectionSocket.recv(1024)
+        print('data=%s', (data))
+        if not data:
+            break
+        myFile.write(data)
+    myFile.close()
+    print('Successfully get the file')
     connectionSocket.send("Successfully Transmition")
-    connectionSocket.close()
+connectionSocket.close()

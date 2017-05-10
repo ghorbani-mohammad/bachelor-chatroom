@@ -58,7 +58,7 @@ class Window(QtGui.QMainWindow):
         btn_Send_Text.move(390,233)
 
         btn_Send_File=QtGui.QPushButton("File",self)
-        btn_Send_File.clicked.connect(self.Send_File)
+        btn_Send_File.clicked.connect(self.Select_File)
         btn_Send_File.move(390,265)
         self.show()
     
@@ -68,26 +68,35 @@ class Window(QtGui.QMainWindow):
         self.textbox_Message.setText("")
         print(sentence)
         self.clientSocket.sendto(sentence.encode('utf-8'),(self.serverName, self.serverPort))
-        # modifiedSentence=self.clientSocket.recv(1024)
-        # print ('From Server:',modifiedSentence.decode())
 
-    def Send_File(self):
+    def Select_File(self):
         print("Sending File....")
         fileName = QFileDialog.getOpenFileName(self, 'Choose a TXT File','',"Text Files (*.txt)")
-        try:
-            file=open(fileName,'r')
-            self.clientSocket.sendto(("f").encode('utf-8'),(self.serverName, self.serverPort))
-            fileName=os.path.basename(fileName)#Getting Pure File Name
-            self.clientSocket.sendto(fileName.encode('utf-8'),(self.serverName, self.serverPort))
-            num_lines = sum(1 for line in file)
-            print(num_lines)
-            self.clientSocket.sendto(str(num_lines).encode('utf-8'),(self.serverName, self.serverPort))
-            # for line in file:
-            #     line=line.encode('utf-8')
-            #     self.clientSocket.sendto(line.encode('utf-8'),(self.serverName,self.serverPort))
-        except:
-            print("Sorry We Have Some Problem")
+        
+        self.clientSocket.sendall(("f").encode('utf-8'))
+        fileName=os.path.basename(fileName)#Getting Pure File Name
+        self.clientSocket.sendall(fileName.encode('utf-8'))
 
+        try:
+            _thread.start_new_thread(self.Send_file,(fileName,))
+            print("Thread Created")
+        except:
+            print("Unable To Start New Thread")
+
+    def Send_file(self,fileName):
+        self.serverPortFTP=12001
+        self.clientSocketFTP=socket(AF_INET,SOCK_STREAM)
+        self.clientSocketFTP.connect((self.serverName,self.serverPortFTP))
+
+        file=open(fileName,'rb')
+        l = file.read()
+        print(l)
+        self.clientSocketFTP.sendall(l)
+        file.close()
+        status=self.clientSocketFTP.recv(1024)
+        self.clientSocketFTP.close()
+        self.textbox_Messages_box.append(status.decode()+'\n')
+        
     
     def Getting_Messages(self,conn):
         while 1:
