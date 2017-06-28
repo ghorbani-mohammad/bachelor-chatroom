@@ -39,6 +39,9 @@ def Serve_User(connectionSocket):
                 print("Thread Created")
             except:
                 print("Unable To Start New Thread")
+    userList.remove(connectionSocket)
+    connectionSocket.close()
+
 serverPort=12000
 serverSocket=socket(AF_INET,SOCK_STREAM)
 serverSocket.bind(('',serverPort))
