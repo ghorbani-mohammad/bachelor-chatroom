@@ -13,6 +13,30 @@ def Get_File(fileName):
     ftpconnectionSocket.close()
     print('Successfully Getting Information')
 
+def Serve_User(connectionSocket):
+    while 1:
+        sentence = connectionSocket.recv(1024)
+        if not sentence:
+            break
+        sentence = sentence.decode()
+        if sentence == 'm':
+            print("Message Coming...")
+            sentence = connectionSocket.recv(1024)
+            sentence = sentence.decode()
+            print(sentence)
+            capitalizedSentence = sentence.upper()
+            capitalizedSentence = capitalizedSentence.encode('utf-8')
+            connectionSocket.send(capitalizedSentence)
+        elif sentence == 'f':
+            print("File Coming...")
+            fileName = connectionSocket.recv(1024)
+            fileName = fileName.decode()
+            print(fileName)
+            try:
+                _thread.start_new_thread(Get_File, (fileName,))
+                print("Thread Created")
+            except:
+                print("Unable To Start New Thread")
 serverPort=12000
 serverSocket=socket(AF_INET,SOCK_STREAM)
 serverSocket.bind(('',serverPort))
@@ -24,29 +48,10 @@ ftpServer.bind(('',ftpServerPort))
 ftpServer.listen(1)
 
 print ('The server is ready to receive')
-connectionSocket, addr=serverSocket.accept()
-print ('Connection From Ip:'+str(addr)+' Is Accepted')
+
 while 1:
-    sentence= connectionSocket.recv(1024)
-    if not sentence:
-        break
-    sentence=sentence.decode()
-    if sentence=='m':
-        print("Message Coming...")
-        sentence= connectionSocket.recv(1024)
-        sentence=sentence.decode()
-        print(sentence)
-        capitalizedSentence=sentence.upper()
-        capitalizedSentence=capitalizedSentence.encode('utf-8')
-        connectionSocket.send(capitalizedSentence)
-    elif sentence=='f':            
-        print("File Coming...")
-        fileName=connectionSocket.recv(1024)
-        fileName=fileName.decode()
-        print(fileName)
-        try:
-            _thread.start_new_thread(Get_File,(fileName,))
-            print("Thread Created")
-        except:
-            print("Unable To Start New Thread")
-connectionSocket.close()
+    connectionSocket, addr = serverSocket.accept()
+    print ('Connection From Ip:' + str(addr) + ' Is Accepted')
+    _thread.start_new_thread(Serve_User, (connectionSocket,))
+
+
