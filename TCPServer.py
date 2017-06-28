@@ -14,6 +14,8 @@ def Get_File(fileName):
     print('Successfully Getting Information')
 
 def Serve_User(connectionSocket):
+    global userList
+    print(len(userList))
     while 1:
         sentence = connectionSocket.recv(1024)
         if not sentence:
@@ -49,8 +51,10 @@ ftpServer.listen(1)
 
 print ('The server is ready to receive')
 
+userList=[]
 while 1:
     connectionSocket, addr = serverSocket.accept()
+    userList.appendd(connectionSocket)
     print ('Connection From Ip:' + str(addr) + ' Is Accepted')
     _thread.start_new_thread(Serve_User, (connectionSocket,))
 
