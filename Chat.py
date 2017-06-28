@@ -107,6 +107,7 @@ class Window(QtGui.QMainWindow):
         
     def close_application(self):
         print("\nClosing...\n")
+        self.clientSocket.sendto(("c").encode('utf-8'), (self.serverName, self.serverPort))
         sys.exit()
 
     def centerOnScreen (self):

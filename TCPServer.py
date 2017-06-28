@@ -20,7 +20,6 @@ def Serve_User(connectionSocket):
     while connectionOpen:
         sentence = connectionSocket.recv(1024)
         if not sentence:
-            connectionOpen=False
             print("Connection Is Closed")
         sentence = sentence.decode()
         if sentence == 'm':
@@ -41,6 +40,9 @@ def Serve_User(connectionSocket):
                 print("Thread Created")
             except:
                 print("Unable To Start New Thread")
+        elif sentence=='c':
+            print("Closing Connection...")
+            connectionOpen = False
     print("Going To Remove User From List")
     userList.remove(connectionSocket)
     connectionSocket.close()
