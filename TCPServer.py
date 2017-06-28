@@ -16,10 +16,12 @@ def Get_File(fileName):
 def Serve_User(connectionSocket):
     global userList
     print(len(userList))
-    while 1:
+    connectionOpen=True
+    while connectionOpen:
         sentence = connectionSocket.recv(1024)
         if not sentence:
-            return
+            connectionOpen=False
+            print("Connection Is Closed")
         sentence = sentence.decode()
         if sentence == 'm':
             print("Message Coming...")
