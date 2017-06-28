@@ -54,7 +54,7 @@ print ('The server is ready to receive')
 userList=[]
 while 1:
     connectionSocket, addr = serverSocket.accept()
-    userList.appendd(connectionSocket)
+    userList.append(connectionSocket)
     print ('Connection From Ip:' + str(addr) + ' Is Accepted')
     _thread.start_new_thread(Serve_User, (connectionSocket,))
 
