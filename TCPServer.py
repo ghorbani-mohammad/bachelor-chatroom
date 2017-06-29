@@ -1,7 +1,8 @@
 from socket import *
 import _thread
 
-def Get_File(fileName):
+def Get_File(name,fileName):
+    global userList
     print('Thread with file name:'+fileName)
     ftpconnectionSocket, addr=ftpServer.accept()
     data = ftpconnectionSocket.recv(1024)
@@ -9,8 +10,9 @@ def Get_File(fileName):
     myFile=open(fileName,"wb+")
     myFile.write(data)
     myFile.close()
-    ftpconnectionSocket.send((fileName+" Uploaded By ").encode())
     ftpconnectionSocket.close()
+    for user in userList:
+        user.send((fileName + " --> Uploaded By --> "+name).encode())
     print('Successfully Getting Information')
 
 def Serve_User(connectionSocket):
@@ -43,7 +45,7 @@ def Serve_User(connectionSocket):
             fileName = fileName.decode()
             print(fileName)
             try:
-                _thread.start_new_thread(Get_File, (fileName,))
+                _thread.start_new_thread(Get_File, (name,fileName,))
                 print("Thread Created")
             except:
                 print("Unable To Start New Thread")
