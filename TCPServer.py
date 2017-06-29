@@ -29,7 +29,7 @@ def Serve_User(connectionSocket):
             print(sentence)
             sentence = sentence.encode('utf-8')
             for user in userList:
-                connectionSocket.send(sentence)
+                user.send(sentence)
         elif sentence == 'f':
             print("File Coming...")
             fileName = connectionSocket.recv(1024)
