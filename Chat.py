@@ -117,9 +117,9 @@ class Window(QtGui.QMainWindow):
 
         file=open(fileName,'rb')
         l = file.read()
+        file.close()
         print(l)
         self.clientSocketFTP.sendall(l)
-        file.close()
         status=self.clientSocketFTP.recv(1024)
         self.clientSocketFTP.close()
         self.textbox_Messages_box.append(status.decode()+'\n')
