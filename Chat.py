@@ -135,6 +135,7 @@ class Window(QtGui.QMainWindow):
     def closeEvent(self,event):
         print("\nClosing...\n")
         self.clientSocket.sendto(("c").encode('utf-8'), (self.serverName, self.serverPort))
+        self.clientSocket.sendto(self.name.encode('utf-8'), (self.serverName, self.serverPort))
         # event.ignore()
         sys.exit()
 
