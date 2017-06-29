@@ -33,6 +33,7 @@ def Serve_User(connectionSocket):
             sentence = connectionSocket.recv(1024)
             sentence = sentence.decode()
             print(sentence)
+            sentence = name + " -> " + sentence
             sentence = sentence.encode('utf-8')
             for user in userList:
                 user.send(sentence)

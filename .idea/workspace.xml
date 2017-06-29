@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ff027570-d198-406c-aa55-6cae88955847" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Chat.py" afterPath="$PROJECT_DIR$/Chat.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/TCPServer.py" afterPath="$PROJECT_DIR$/TCPServer.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -12,7 +13,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="CoverageDataManager">
-    <SUITE FILE_PATH="coverage/ChatRoom$Chat.coverage" NAME="Chat Coverage Results" MODIFIED="1498748131405" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/ChatRoom$Chat.coverage" NAME="Chat Coverage Results" MODIFIED="1498748727508" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/TCP_Connection$Chat.coverage" NAME="Chat Coverage Results" MODIFIED="1494333440306" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
@@ -22,7 +23,7 @@
         <entry file="file://$PROJECT_DIR$/Chat.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="189">
-              <caret line="135" column="29" lean-forward="true" selection-start-line="135" selection-start-column="29" selection-end-line="135" selection-end-column="29" />
+              <caret line="138" column="30" lean-forward="false" selection-start-line="138" selection-start-column="30" selection-end-line="138" selection-end-column="30" />
               <folding>
                 <element signature="e#0#10#0" expanded="true" />
                 <element signature="e#3362#3856#0" expanded="false" />
@@ -36,8 +37,8 @@
       <file leaf-file-name="TCPServer.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/TCPServer.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="204">
-              <caret line="51" column="0" lean-forward="false" selection-start-line="51" selection-start-column="0" selection-end-line="51" selection-end-column="0" />
+            <state relative-caret-position="272">
+              <caret line="40" column="35" lean-forward="true" selection-start-line="40" selection-start-column="35" selection-end-line="40" selection-end-column="35" />
               <folding>
                 <element signature="e#0#20#0" expanded="true" />
               </folding>
@@ -437,7 +438,7 @@
     <entry file="file://$PROJECT_DIR$/Chat.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="189">
-          <caret line="135" column="29" lean-forward="true" selection-start-line="135" selection-start-column="29" selection-end-line="135" selection-end-column="29" />
+          <caret line="138" column="30" lean-forward="false" selection-start-line="138" selection-start-column="30" selection-end-line="138" selection-end-column="30" />
           <folding>
             <element signature="e#0#10#0" expanded="true" />
             <element signature="e#3362#3856#0" expanded="false" />
@@ -449,8 +450,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/TCPServer.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="51" column="0" lean-forward="false" selection-start-line="51" selection-start-column="0" selection-end-line="51" selection-end-column="0" />
+        <state relative-caret-position="272">
+          <caret line="40" column="35" lean-forward="true" selection-start-line="40" selection-start-column="35" selection-end-line="40" selection-end-column="35" />
           <folding>
             <element signature="e#0#20#0" expanded="true" />
           </folding>
