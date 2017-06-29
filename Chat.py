@@ -51,6 +51,10 @@ class Window(QtGui.QMainWindow):
         
         self.centerOnScreen()
         self.home()
+        # self.closeEvent = self.close_application
+        # self.closeEvent(self.close_application)
+        # self.closeEvent(self,self.close_application)
+
 
     def home(self):
         btn_Send_Text=QtGui.QPushButton("Send",self)
@@ -105,9 +109,10 @@ class Window(QtGui.QMainWindow):
                 break
             self.textbox_Messages_box.append(modifiedSentence.decode()+'\n')
         
-    def close_application(self):
+    def closeEvent(self,event):
         print("\nClosing...\n")
         self.clientSocket.sendto(("c").encode('utf-8'), (self.serverName, self.serverPort))
+        # event.ignore()
         sys.exit()
 
     def centerOnScreen (self):

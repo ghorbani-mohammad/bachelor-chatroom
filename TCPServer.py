@@ -27,9 +27,9 @@ def Serve_User(connectionSocket):
             sentence = connectionSocket.recv(1024)
             sentence = sentence.decode()
             print(sentence)
-            capitalizedSentence = sentence.upper()
-            capitalizedSentence = capitalizedSentence.encode('utf-8')
-            connectionSocket.send(capitalizedSentence)
+            sentence = sentence.encode('utf-8')
+            for user in userList:
+                connectionSocket.send(sentence)
         elif sentence == 'f':
             print("File Coming...")
             fileName = connectionSocket.recv(1024)
