@@ -47,8 +47,8 @@ def Serve_User(connectionSocket):
             except:
                 print("Unable To Start New Thread")
         elif sentence=='c':
-            name = connectionSocket.recv(1024)
             print("Going To Remove User From List")
+            name = connectionSocket.recv(1024)
             userList.remove(connectionSocket)
             connectionSocket.close()
             bye = name.decode() + " Left The Chat"
