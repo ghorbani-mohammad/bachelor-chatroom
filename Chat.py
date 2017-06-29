@@ -120,9 +120,9 @@ class Window(QtGui.QMainWindow):
         file.close()
         print(l)
         self.clientSocketFTP.sendall(l)
-        status=self.clientSocketFTP.recv(1024)
-        self.clientSocketFTP.close()
-        self.textbox_Messages_box.append(status.decode()+'\n')
+        # status=self.clientSocketFTP.recv(1024)
+        # self.clientSocketFTP.close()
+        # self.textbox_Messages_box.append(status.decode()+'\n')
         
     
     def Getting_Messages(self,conn):

@@ -22,15 +22,15 @@
       <file leaf-file-name="Chat.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Chat.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="417">
-              <caret line="121" column="39" lean-forward="false" selection-start-line="121" selection-start-column="39" selection-end-line="121" selection-end-column="39" />
+            <state relative-caret-position="28">
+              <caret line="91" column="4" lean-forward="true" selection-start-line="91" selection-start-column="4" selection-end-line="91" selection-end-column="4" />
               <folding>
                 <element signature="e#0#10#0" expanded="true" />
                 <element signature="e#320#2454#0" expanded="false" />
                 <element signature="e#2485#2788#0" expanded="false" />
                 <element signature="e#3039#3325#0" expanded="false" />
                 <element signature="e#3362#3856#0" expanded="false" />
-                <element signature="e#4399#4588#0" expanded="false" />
+                <element signature="e#4405#4594#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -39,8 +39,8 @@
       <file leaf-file-name="TCPServer.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/TCPServer.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="85">
-              <caret line="5" column="34" lean-forward="false" selection-start-line="5" selection-start-column="34" selection-end-line="5" selection-end-column="34" />
+            <state relative-caret-position="-168">
+              <caret line="4" column="19" lean-forward="true" selection-start-line="4" selection-start-column="19" selection-end-line="4" selection-end-column="19" />
               <folding>
                 <element signature="e#0#20#0" expanded="true" />
               </folding>
@@ -382,7 +382,7 @@
             <element signature="e#2485#2788#0" expanded="false" />
             <element signature="e#3039#3325#0" expanded="false" />
             <element signature="e#3362#3856#0" expanded="false" />
-            <element signature="e#4399#4588#0" expanded="false" />
+            <element signature="e#4405#4594#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -415,7 +415,7 @@
             <element signature="e#2485#2788#0" expanded="false" />
             <element signature="e#3039#3325#0" expanded="false" />
             <element signature="e#3362#3856#0" expanded="false" />
-            <element signature="e#4399#4588#0" expanded="false" />
+            <element signature="e#4405#4594#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -440,7 +440,7 @@
             <element signature="e#2485#2788#0" expanded="false" />
             <element signature="e#3039#3325#0" expanded="false" />
             <element signature="e#3362#3856#0" expanded="false" />
-            <element signature="e#4399#4588#0" expanded="false" />
+            <element signature="e#4405#4594#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -465,7 +465,7 @@
             <element signature="e#2485#2788#0" expanded="false" />
             <element signature="e#3039#3325#0" expanded="false" />
             <element signature="e#3362#3856#0" expanded="false" />
-            <element signature="e#4399#4588#0" expanded="false" />
+            <element signature="e#4405#4594#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -490,7 +490,7 @@
             <element signature="e#2485#2788#0" expanded="false" />
             <element signature="e#3039#3325#0" expanded="false" />
             <element signature="e#3362#3856#0" expanded="false" />
-            <element signature="e#4399#4588#0" expanded="false" />
+            <element signature="e#4405#4594#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -505,7 +505,7 @@
             <element signature="e#2485#2788#0" expanded="false" />
             <element signature="e#3039#3325#0" expanded="false" />
             <element signature="e#3362#3856#0" expanded="false" />
-            <element signature="e#4399#4588#0" expanded="false" />
+            <element signature="e#4405#4594#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -536,23 +536,23 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Chat.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="417">
-          <caret line="121" column="39" lean-forward="false" selection-start-line="121" selection-start-column="39" selection-end-line="121" selection-end-column="39" />
+        <state relative-caret-position="28">
+          <caret line="91" column="4" lean-forward="true" selection-start-line="91" selection-start-column="4" selection-end-line="91" selection-end-column="4" />
           <folding>
             <element signature="e#0#10#0" expanded="true" />
             <element signature="e#320#2454#0" expanded="false" />
             <element signature="e#2485#2788#0" expanded="false" />
             <element signature="e#3039#3325#0" expanded="false" />
             <element signature="e#3362#3856#0" expanded="false" />
-            <element signature="e#4399#4588#0" expanded="false" />
+            <element signature="e#4405#4594#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/TCPServer.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="85">
-          <caret line="5" column="34" lean-forward="false" selection-start-line="5" selection-start-column="34" selection-end-line="5" selection-end-column="34" />
+        <state relative-caret-position="-168">
+          <caret line="4" column="19" lean-forward="true" selection-start-line="4" selection-start-column="19" selection-end-line="4" selection-end-column="19" />
           <folding>
             <element signature="e#0#20#0" expanded="true" />
           </folding>

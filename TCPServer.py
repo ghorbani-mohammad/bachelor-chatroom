@@ -4,7 +4,7 @@ import _thread
 def Get_File(name,fileName):
     global userList
     print('Thread with file name: '+fileName)
-    ftpconnectionSocket=ftpServer.accept()
+    ftpconnectionSocket,addr=ftpServer.accept()
     data = ftpconnectionSocket.recv(1024)
     print(data.decode())
     myFile=open(fileName,"wb+")
