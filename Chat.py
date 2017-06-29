@@ -9,51 +9,71 @@ from PyQt4.QtGui import *
 from PyQt4.QtCore import *
 from socket import *
 
+
+
 class Window(QtGui.QMainWindow):
     
     def __init__(self):
-        
-        self.serverName='m-gh.info'
-        self.serverPort=12000
-        self.clientSocket=socket(AF_INET,SOCK_STREAM)
-        self.clientSocket.connect((self.serverName,self.serverPort))
+        self.chatRoomWindow()
+
+    def chatRoomWindow(self):
+        super(Window, self).__init__()
+        myappid = 'mycompany.myproduct.subproduct.version'  # arbitrary string
+        ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
+
+        nameDialog=QtGui.QInputDialog(None, QtCore.Qt.WindowSystemMenuHint | QtCore.Qt.WindowTitleHint)
+        nameDialog.setWindowTitle("Insert Your Name")
+        nameDialog.setWindowIcon(QtGui.QIcon('icon.png'))
+        nameDialog.setInputMode(QInputDialog.TextInput)
+        nameDialog.setOkButtonText("Join")
+        ok=nameDialog.exec()
+        self.name=nameDialog.textValue()
+        if ok:
+            print(self.name)
+        else:
+            sys.exit()
+
+        self.serverName = 'm-gh.info'
+        self.serverPort = 12000
+        self.clientSocket = socket(AF_INET, SOCK_STREAM)
 
         try:
-            _thread.start_new_thread(self.Getting_Messages,(self.clientSocket,))
+            self.clientSocket.connect((self.serverName, self.serverPort))
+            self.Join()
+        except:
+            print("Unable To Establish Connection")
+            sys.exit()
+
+        try:
+            _thread.start_new_thread(self.Getting_Messages, (self.clientSocket,))
             print("Thread Created")
         except:
             print("Unable To Start New Thread")
+            sys.exit()
 
-        super(Window,self).__init__()
-        self.setGeometry(50,50,500,300)
-        self.setFixedSize(500,300)
+        self.setGeometry(50, 50, 500, 300)
+        self.setFixedSize(500, 300)
         self.setWindowTitle("Chater")
         self.setWindowIcon(QtGui.QIcon('icon.png'))
-
-        myappid = 'mycompany.myproduct.subproduct.version'  # arbitrary string
-        ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
 
         self.textbox_Message = QLineEdit(self)
         self.textbox_Message.setAlignment(Qt.AlignTop)
         self.textbox_Message.move(5, 230)
-        self.textbox_Message.resize(380,65)
+        self.textbox_Message.resize(380, 65)
         self.textbox_Message.returnPressed.connect(self.Send_Message)
         self.textbox_Message.setPlaceholderText("Type Your Message Here....")
         f = self.textbox_Message.font()
-        f.setPointSize(18) # sets the size to 27
+        f.setPointSize(18)
         self.textbox_Message.setFont(f)
 
-        self.textbox_Messages_box=QTextEdit(self)
+        self.textbox_Messages_box = QTextEdit(self)
         # self.textbox_Messages_box.setAlignment(Qt.AlignTop)
         self.textbox_Messages_box.setReadOnly(True)
         self.textbox_Messages_box.move(5, 5)
-        self.textbox_Messages_box.resize(380,220)
-        
+        self.textbox_Messages_box.resize(380, 220)
+
         self.centerOnScreen()
         self.home()
-        # self.closeEvent = self.close_application
-        # self.closeEvent(self.close_application)
-        # self.closeEvent(self,self.close_application)
 
 
     def home(self):
@@ -65,6 +85,10 @@ class Window(QtGui.QMainWindow):
         btn_Send_File.clicked.connect(self.Select_File)
         btn_Send_File.move(390,265)
         self.show()
+
+    def Join(self):
+        self.clientSocket.sendto(("j").encode('utf-8'), (self.serverName, self.serverPort))
+        self.clientSocket.sendto(self.name.encode('utf-8'), (self.serverName, self.serverPort))
     
     def Send_Message(self):
         self.clientSocket.sendto(("m").encode('utf-8'),(self.serverName, self.serverPort))
@@ -80,7 +104,6 @@ class Window(QtGui.QMainWindow):
         self.clientSocket.sendall(("f").encode('utf-8'))
         fileName=os.path.basename(fileName)#Getting Pure File Name
         self.clientSocket.sendall(fileName.encode('utf-8'))
-
         try:
             _thread.start_new_thread(self.Send_file,(fileName,))
             print("Thread Created")
@@ -119,6 +142,8 @@ class Window(QtGui.QMainWindow):
         resolution = QtGui.QDesktopWidget().screenGeometry()
         self.move((resolution.width() / 2) - (self.frameSize().width() / 2),
                   (resolution.height() / 2) - (self.frameSize().height() / 2)-50)
+
+
 def run():
     app=QtGui.QApplication(sys.argv)
     GUI=Window()

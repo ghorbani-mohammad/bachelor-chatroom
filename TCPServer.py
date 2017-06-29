@@ -22,6 +22,12 @@ def Serve_User(connectionSocket):
         if not sentence:
             print("Connection Is Closed")
         sentence = sentence.decode()
+        if sentence == 'j':
+            name = connectionSocket.recv(1024)
+            welcome=name.decode()+" Joined To Chat"
+            welcome=welcome.encode('utf-8')
+            for user in userList:
+                user.send(welcome)
         if sentence == 'm':
             print("Message Coming...")
             sentence = connectionSocket.recv(1024)
