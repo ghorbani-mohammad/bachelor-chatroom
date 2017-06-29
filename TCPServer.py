@@ -48,15 +48,16 @@ def Serve_User(connectionSocket):
                 print("Unable To Start New Thread")
         elif sentence=='c':
             name = connectionSocket.recv(1024)
+            print("Going To Remove User From List")
+            userList.remove(connectionSocket)
+            connectionSocket.close()
             bye = name.decode() + " Left The Chat"
             bye = bye.encode('utf-8')
             for user in userList:
                 user.send(bye)
             print("Closing Connection...")
             connectionOpen = False
-    print("Going To Remove User From List")
-    userList.remove(connectionSocket)
-    connectionSocket.close()
+
 
 serverPort=12000
 serverSocket=socket(AF_INET,SOCK_STREAM)
