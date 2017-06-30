@@ -40,8 +40,9 @@ def Serve_User(connectionSocket):
             print(names)
             for user in userList:
                 user.sendall(("j").encode('utf-8'))
-                user.shutdown()
+                user.shutdown(1)
                 user.sendall(name)
+                user.shutdown(1)
                 user.sendall(names)
         if sentence == 'm':
             print("Message Coming...")
