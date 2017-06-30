@@ -37,7 +37,8 @@ def Serve_User(connectionSocket):
             welcome="<span>" + name.decode()+" Joined To Chat" + "</span>"
             welcome=welcome.encode('utf-8')
             for user in userList:
-                user.send(welcome)
+                user.sendall(("j").encode('utf-8'))
+                user.sendall(welcome)
         if sentence == 'm':
             print("Message Coming...")
             sentence = connectionSocket.recv(1024)

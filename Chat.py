@@ -22,7 +22,9 @@ class Window(QtGui.QMainWindow):
         ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
 
         nameDialog=QtGui.QInputDialog(None, QtCore.Qt.WindowSystemMenuHint | QtCore.Qt.WindowTitleHint)
-        nameDialog.setWindowTitle("Insert Your Name")
+        nameDialog.setWindowTitle("Your Name")
+        # nameDialog.setTextValue("Please Insert Your Name")
+        nameDialog.setLabelText("Please Insert Your Name")
         nameDialog.setWindowIcon(QtGui.QIcon('icon.png'))
         nameDialog.setInputMode(QInputDialog.TextInput)
         nameDialog.setOkButtonText("Join")
@@ -77,6 +79,14 @@ class Window(QtGui.QMainWindow):
         self.textbox_Messages_box.setReadOnly(True)
         self.textbox_Messages_box.move(5, 5)
         self.textbox_Messages_box.resize(380, 220)
+
+        self.userList = QTextBrowser(self)
+        # self.textbox_Messages_box.setAlignment(Qt.AlignTop)
+        self.userList.setOpenLinks(False)
+        # self.textbox_Messages_box.anchorClicked.connect(self.downFile)
+        self.userList.setReadOnly(True)
+        self.userList.move(390, 5)
+        self.userList.resize(100, 220)
 
         self.centerOnScreen()
         self.home()
@@ -133,7 +143,10 @@ class Window(QtGui.QMainWindow):
         while 1:
             modifiedSentence=conn.recv(1024)
             modifiedSentence=modifiedSentence.decode()
-            self.textbox_Messages_box.append(modifiedSentence+'\n')
+            if modifiedSentence=='j':
+                print("Joined")
+            else:
+                self.textbox_Messages_box.append(modifiedSentence+'\n')
 
     def downFile(self,url):
         url=str(url.toString())
@@ -151,8 +164,6 @@ class Window(QtGui.QMainWindow):
         except:
             print("Unable To Start New Thread")
 
-
-
     def Get_File(self,fileName):
         self.clientSocketFTP = socket(AF_INET, SOCK_STREAM)
         self.clientSocketFTP.connect((self.serverName, self.serverPortFTP))
@@ -163,6 +174,17 @@ class Window(QtGui.QMainWindow):
         print(data)
         self.clientSocketFTP.close()
         print("Ftp Connection Is Closed!")
+        # QtGui.QMessageBox.information(None,"Succssful Operation","Downloading File Is Complete!")
+
+        msgBox = QtGui.QMessageBox()
+        msgBox.setIcon(QtGui.QMessageBox.Information)
+        msgBox.setText("Do not stare into laser with remaining eye")
+        # msgBox.setWindowIcon(QtGui.QIcon('icon.png'))
+
+        msgBox.addButton(QtGui.QMessageBox.Ok)
+
+        msgBox.setDefaultButton(QtGui.QMessageBox.Ok)
+        ret = msgBox.exec_()
 
     def closeEvent(self,event):
         print("\nClosing...\n")
