@@ -34,8 +34,12 @@ class Window(QtGui.QMainWindow):
             sys.exit()
 
         self.serverName = 'm-gh.info'
+
         self.serverPort = 12000
         self.clientSocket = socket(AF_INET, SOCK_STREAM)
+
+        self.serverPortFTP = 12001
+        self.clientSocketFTP = socket(AF_INET, SOCK_STREAM)
 
         try:
             self.clientSocket.connect((self.serverName, self.serverPort))
@@ -68,6 +72,7 @@ class Window(QtGui.QMainWindow):
 
         self.textbox_Messages_box = QTextBrowser(self)
         # self.textbox_Messages_box.setAlignment(Qt.AlignTop)
+        self.textbox_Messages_box.setOpenLinks(False)
         self.textbox_Messages_box.anchorClicked.connect(self.downFile)
         self.textbox_Messages_box.setReadOnly(True)
         self.textbox_Messages_box.move(5, 5)
@@ -88,15 +93,15 @@ class Window(QtGui.QMainWindow):
         self.show()
 
     def Join(self):
-        self.clientSocket.sendto(("j").encode('utf-8'), (self.serverName, self.serverPort))
-        self.clientSocket.sendto(self.name.encode('utf-8'), (self.serverName, self.serverPort))
+        self.clientSocket.sendall(("j").encode('utf-8'))
+        self.clientSocket.sendall(self.name.encode('utf-8'))
     
     def Send_Message(self):
-        self.clientSocket.sendto(("m").encode('utf-8'),(self.serverName, self.serverPort))
+        self.clientSocket.sendall(("m").encode('utf-8'))
         sentence=self.textbox_Message.text()
         self.textbox_Message.setText("")
         print(sentence)
-        self.clientSocket.sendto(sentence.encode('utf-8'),(self.serverName, self.serverPort))
+        self.clientSocket.sendall(sentence.encode('utf-8'))
 
     def Select_File(self):
         print("Sending File....")
@@ -112,8 +117,6 @@ class Window(QtGui.QMainWindow):
             print("Unable To Start New Thread")
 
     def Send_file(self,fileName):
-        self.serverPortFTP=12001
-        self.clientSocketFTP=socket(AF_INET,SOCK_STREAM)
         self.clientSocketFTP.connect((self.serverName,self.serverPortFTP))
 
         file=open(fileName,'rb')
@@ -121,30 +124,45 @@ class Window(QtGui.QMainWindow):
         file.close()
         print(l)
         self.clientSocketFTP.sendall(l)
-        # status=self.clientSocketFTP.recv(1024)
-        # self.clientSocketFTP.close()
-        # self.textbox_Messages_box.append(status.decode()+'\n')
         
     
     def Getting_Messages(self,conn):
         while 1:
             modifiedSentence=conn.recv(1024)
-            # if not modifiedSentence:
-                # break
             modifiedSentence=modifiedSentence.decode()
-            # modifiedSentence="<a href=\" \">"+modifiedSentence+"</a>"
-            # modifiedSentence.setTextInteractionFlags(Qt.TextBrowserInteraction)
             self.textbox_Messages_box.append(modifiedSentence+'\n')
 
-    def downFile(self):
+    def downFile(self,url):
+        url=str(url.toString())
+        # print(url)
         print("anchor clicked!")
+        fileName = QFileDialog.getSaveFileName(self, 'Determining A Path For Saving TXT File', '', "Text Files (*.txt)")
+        fileName = os.path.basename(fileName)  # Getting Pure File Name
+        print(fileName)
 
-        
+        self.clientSocket.sendall(("fd").encode('utf-8'))
+        self.clientSocket.sendall(url.encode('utf-8'))
+        try:
+            _thread.start_new_thread(self.Get_File, (fileName,))
+            print("Thread Created")
+        except:
+            print("Unable To Start New Thread")
+
+
+
+    def Get_File(self,fileName):
+        self.clientSocketFTP.connect((self.serverName, self.serverPortFTP))
+        data = self.clientSocketFTP.recv(1024)
+        myFile = open(fileName, "wb+")
+        myFile.write(data)
+        myFile.close()
+        print(data)
+
     def closeEvent(self,event):
         print("\nClosing...\n")
-        self.clientSocket.sendto(("c").encode('utf-8'), (self.serverName, self.serverPort))
+        self.clientSocket.sendall(("c").encode('utf-8'))
         time.sleep(.5)
-        self.clientSocket.sendto(self.name.encode('utf-8'), (self.serverName, self.serverPort))
+        self.clientSocket.sendall(self.name.encode('utf-8'))
         # event.ignore()
         sys.exit()
 

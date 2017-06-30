@@ -15,6 +15,13 @@ def Get_File(name,fileName):
         user.send(('<a href="'+fileName+'">' +fileName + ' --> Uploaded By --> '+ name + '</a>').encode())
     print('Successfully Getting Information')
 
+def Send_File(fileName):
+    ftpconnectionSocket, addr = ftpServer.accept()
+    file = open(fileName, 'rb')
+    l = file.read()
+    file.close()
+    ftpconnectionSocket.sendall(l)
+
 def Serve_User(connectionSocket):
     global userList
     print(len(userList))
@@ -49,6 +56,7 @@ def Serve_User(connectionSocket):
                 print("Thread Created")
             except:
                 print("Unable To Start New Thread")
+
         elif sentence=='c':
             print("Going To Remove User From List")
             name = connectionSocket.recv(1024)
@@ -60,6 +68,16 @@ def Serve_User(connectionSocket):
                 user.send(bye)
             print("Closing Connection...")
             connectionOpen = False
+
+        elif sentence == 'fd':
+            print("Going To Send File To A User")
+            fileName = connectionSocket.recv(1024)
+            fileName = fileName.decode()
+            try:
+                _thread.start_new_thread(Send_File, (fileName,))
+                print("Thread Created")
+            except:
+                print("Unable To Start New Thread")
 
 
 serverPort=12000
