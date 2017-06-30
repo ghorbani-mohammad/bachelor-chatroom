@@ -145,6 +145,11 @@ class Window(QtGui.QMainWindow):
             modifiedSentence=modifiedSentence.decode()
             if modifiedSentence=='j':
                 print("Joined")
+                name = conn.recv(1024)
+                name = modifiedSentence.decode()
+                self.userList.append(name + '\n')
+                welcome="<span>" + name.decode()+" Joined To Chat" + "</span>"
+                self.textbox_Messages_box.append(welcome + '\n')
             else:
                 self.textbox_Messages_box.append(modifiedSentence+'\n')
 
