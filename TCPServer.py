@@ -17,6 +17,7 @@ def Get_File(name,fileName):
 
 def Send_File(fileName):
     ftpconnectionSocket, addr = ftpServer.accept()
+    print("Ftp Connection Is Accepted!")
     file = open(fileName, 'rb')
     l = file.read()
     file.close()

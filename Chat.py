@@ -118,12 +118,14 @@ class Window(QtGui.QMainWindow):
 
     def Send_file(self,fileName):
         self.clientSocketFTP.connect((self.serverName,self.serverPortFTP))
-
         file=open(fileName,'rb')
         l = file.read()
         file.close()
         print(l)
         self.clientSocketFTP.sendall(l)
+        time.sleep(.5)
+        self.clientSocketFTP.close()
+        print("Ftp Connection Is Closed!")
         
     
     def Getting_Messages(self,conn):
@@ -152,11 +154,14 @@ class Window(QtGui.QMainWindow):
 
     def Get_File(self,fileName):
         self.clientSocketFTP.connect((self.serverName, self.serverPortFTP))
+        time.sleep(.5)
         data = self.clientSocketFTP.recv(1024)
         myFile = open(fileName, "wb+")
         myFile.write(data)
         myFile.close()
         print(data)
+        self.clientSocketFTP.close()
+        print("Ftp Connection Is Closed!")
 
     def closeEvent(self,event):
         print("\nClosing...\n")
