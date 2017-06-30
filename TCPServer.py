@@ -16,13 +16,12 @@ def Get_File(name,fileName):
     print('Successfully Getting Information')
 
 def Send_File(fileName):
-    print("Send_File Function Started!")
     ftpconnectionSocket, addr = ftpServer.accept()
-    print("Ftp Connection Is Accepted!")
     file = open(fileName, 'rb')
     l = file.read()
     file.close()
     ftpconnectionSocket.sendall(l)
+    print("Sending File Is Completed!")
 
 def Serve_User(connectionSocket):
     global userList

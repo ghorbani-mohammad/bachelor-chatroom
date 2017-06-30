@@ -39,7 +39,7 @@ class Window(QtGui.QMainWindow):
         self.clientSocket = socket(AF_INET, SOCK_STREAM)
 
         self.serverPortFTP = 12001
-        self.clientSocketFTP = socket(AF_INET, SOCK_STREAM)
+        # self.clientSocketFTP = socket(AF_INET, SOCK_STREAM)
 
         try:
             self.clientSocket.connect((self.serverName, self.serverPort))
@@ -117,6 +117,7 @@ class Window(QtGui.QMainWindow):
             print("Unable To Start New Thread")
 
     def Send_file(self,fileName):
+        self.clientSocketFTP = socket(AF_INET, SOCK_STREAM)
         self.clientSocketFTP.connect((self.serverName,self.serverPortFTP))
         file=open(fileName,'rb')
         l = file.read()
@@ -153,8 +154,8 @@ class Window(QtGui.QMainWindow):
 
 
     def Get_File(self,fileName):
+        self.clientSocketFTP = socket(AF_INET, SOCK_STREAM)
         self.clientSocketFTP.connect((self.serverName, self.serverPortFTP))
-        time.sleep(.5)
         data = self.clientSocketFTP.recv(1024)
         myFile = open(fileName, "wb+")
         myFile.write(data)
