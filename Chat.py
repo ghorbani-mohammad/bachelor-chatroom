@@ -1,17 +1,4 @@
 import sys
-from PyQt4 import QtGui
-
-app=QtGui.QApplication(sys.argv)
-
-window=QtGui.QWidget()
-window.setGeometry(50,50,500,300)
-window.setWindowTitle("Chater")
-
-window.show()
-
-
-sys.exit(app.exec_())
-
 import os
 import ctypes
 import _thread
@@ -79,8 +66,9 @@ class Window(QtGui.QMainWindow):
         f.setPointSize(18)
         self.textbox_Message.setFont(f)
 
-        self.textbox_Messages_box = QTextEdit(self)
+        self.textbox_Messages_box = QTextBrowser(self)
         # self.textbox_Messages_box.setAlignment(Qt.AlignTop)
+        self.textbox_Messages_box.anchorClicked.connect(self.downFile)
         self.textbox_Messages_box.setReadOnly(True)
         self.textbox_Messages_box.move(5, 5)
         self.textbox_Messages_box.resize(380, 220)
@@ -141,9 +129,16 @@ class Window(QtGui.QMainWindow):
     def Getting_Messages(self,conn):
         while 1:
             modifiedSentence=conn.recv(1024)
-            if not modifiedSentence:
-                break
-            self.textbox_Messages_box.append(modifiedSentence.decode()+'\n')
+            # if not modifiedSentence:
+                # break
+            modifiedSentence=modifiedSentence.decode()
+            # modifiedSentence="<a href=\" \">"+modifiedSentence+"</a>"
+            # modifiedSentence.setTextInteractionFlags(Qt.TextBrowserInteraction)
+            self.textbox_Messages_box.append(modifiedSentence+'\n')
+
+    def downFile(self):
+        print("anchor clicked!")
+
         
     def closeEvent(self,event):
         print("\nClosing...\n")

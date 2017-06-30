@@ -12,7 +12,7 @@ def Get_File(name,fileName):
     myFile.close()
     ftpconnectionSocket.close()
     for user in userList:
-        user.send((fileName + " --> Uploaded By --> "+name).encode())
+        user.send(('<a href="'+fileName+'">' +fileName + ' --> Uploaded By --> '+ name + '</a>').encode())
     print('Successfully Getting Information')
 
 def Serve_User(connectionSocket):
@@ -26,7 +26,7 @@ def Serve_User(connectionSocket):
         sentence = sentence.decode()
         if sentence == 'j':
             name = connectionSocket.recv(1024)
-            welcome=name.decode()+" Joined To Chat"
+            welcome="<span>" + name.decode()+" Joined To Chat" + "</span>"
             welcome=welcome.encode('utf-8')
             for user in userList:
                 user.send(welcome)
@@ -35,7 +35,7 @@ def Serve_User(connectionSocket):
             sentence = connectionSocket.recv(1024)
             sentence = sentence.decode()
             print(sentence)
-            sentence = name + " -> " + sentence
+            sentence = "<span>" + name + " -> " + sentence + "</span>"
             sentence = sentence.encode('utf-8')
             for user in userList:
                 user.send(sentence)
@@ -54,7 +54,7 @@ def Serve_User(connectionSocket):
             name = connectionSocket.recv(1024)
             userList.remove(connectionSocket)
             connectionSocket.close()
-            bye = name.decode() + " Left The Chat"
+            bye ="<span>" + name.decode() + " Left The Chat" + "</span>"
             bye = bye.encode('utf-8')
             for user in userList:
                 user.send(bye)
