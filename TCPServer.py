@@ -40,6 +40,7 @@ def Serve_User(connectionSocket):
             print(names)
             for user in userList:
                 user.sendall(("j").encode('utf-8'))
+                user.shutdown()
                 user.sendall(name)
                 user.sendall(names)
         if sentence == 'm':
