@@ -43,7 +43,7 @@ def Serve_User(connectionSocket):
                 user.sendall(("j").encode('utf-8'))
                 time.sleep(.2)
                 user.sendall(name)
-                time(.2)
+                time.sleep(.2)
                 user.sendall(names)
         if sentence == 'm':
             print("Message Coming...")
