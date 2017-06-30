@@ -16,6 +16,7 @@ def Get_File(name,fileName):
     print('Successfully Getting Information')
 
 def Send_File(fileName):
+    print("Send_File Function Started!")
     ftpconnectionSocket, addr = ftpServer.accept()
     print("Ftp Connection Is Accepted!")
     file = open(fileName, 'rb')
@@ -74,6 +75,7 @@ def Serve_User(connectionSocket):
             print("Going To Send File To A User")
             fileName = connectionSocket.recv(1024)
             fileName = fileName.decode()
+            print(fileName)
             try:
                 _thread.start_new_thread(Send_File, (fileName,))
                 print("Thread Created")
