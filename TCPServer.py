@@ -24,7 +24,7 @@ def Send_File(fileName):
     print("Sending File Is Completed!")
 
 def Serve_User(connectionSocket):
-    global userList
+    global userList,nameList
     print(len(userList))
     connectionOpen=True
     while connectionOpen:
@@ -34,11 +34,12 @@ def Serve_User(connectionSocket):
         sentence = sentence.decode()
         if sentence == 'j':
             name = connectionSocket.recv(1024)
-            # welcome=name.decode()
-            # welcome=welcome.encode('utf-8')
+            nameList.append(name)
+            names=','.join(nameList)
             for user in userList:
                 user.sendall(("j").encode('utf-8'))
                 user.sendall(name)
+                user.sendall(names)
         if sentence == 'm':
             print("Message Coming...")
             sentence = connectionSocket.recv(1024)
@@ -62,10 +63,9 @@ def Serve_User(connectionSocket):
         elif sentence=='c':
             print("Going To Remove User From List")
             name = connectionSocket.recv(1024)
+            nameList.remove(name)
             userList.remove(connectionSocket)
             connectionSocket.close()
-            # bye ="<span>" + name.decode() + " Left The Chat" + "</span>"
-            # bye = bye.encode('utf-8')
             for user in userList:
                 user.sendall(("c").encode('utf-8'))
                 user.send(name)
@@ -97,6 +97,7 @@ ftpServer.listen(1)
 print ('The server is ready to receive')
 
 userList=[]
+nameList=[]
 while 1:
     connectionSocket, addr = serverSocket.accept()
     userList.append(connectionSocket)
