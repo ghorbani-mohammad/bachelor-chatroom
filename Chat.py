@@ -148,14 +148,12 @@ class Window(QtGui.QMainWindow):
                 name = conn.recv(1024)
                 time.sleep(.2)
                 name = name.decode()
-                print(name)
 
                 names = conn.recv(1024)
-                time.sleep(.2)
+                # time.sleep(.2)
                 names = names.decode()
                 names = names.split(',')
-                # print(names)
-
+                self.userList.clear()
                 for user in names:
                     self.userList.append(user + '\n')
                     # print(user)
@@ -163,7 +161,16 @@ class Window(QtGui.QMainWindow):
                 self.textbox_Messages_box.append(welcome + '\n')
             elif modifiedSentence=='c':
                 name = conn.recv(1024)
+                time.sleep(.2)
                 name = name.decode()
+
+                names = conn.recv(1024)
+                # time.sleep(.2)
+                names = names.decode()
+                names = names.split(',')
+                self.userList.clear()
+                for user in names:
+                    self.userList.append(user + '\n')
                 # self.userList.append(name + '\n')
                 bye = "<span>" + name + " Left The Chat" + "</span>"
                 self.textbox_Messages_box.append(bye + '\n')

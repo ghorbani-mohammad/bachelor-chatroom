@@ -71,9 +71,13 @@ def Serve_User(connectionSocket):
             nameList.remove(name)
             userList.remove(connectionSocket)
             connectionSocket.close()
+            names = ','.join(nameList)
             for user in userList:
                 user.sendall(("c").encode('utf-8'))
-                user.send(name)
+                time.sleep(.2)
+                user.sendall(name)
+                time.sleep(.2)
+                user.sendall(names)
             print("Closing Connection...")
             connectionOpen = False
 
