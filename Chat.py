@@ -146,10 +146,12 @@ class Window(QtGui.QMainWindow):
             if modifiedSentence=='j':
                 print("Joined")
                 name = conn.recv(1024)
+                time.sleep(.2)
                 name = name.decode()
                 print(name)
 
                 names = conn.recv(1024)
+                time.sleep(.2)
                 names = names.decode()
                 names = names.split(',')
                 # print(names)

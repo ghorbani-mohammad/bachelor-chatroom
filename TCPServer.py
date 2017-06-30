@@ -1,5 +1,6 @@
 from socket import *
 import _thread
+import time
 
 def Get_File(name,fileName):
     global userList
@@ -40,9 +41,9 @@ def Serve_User(connectionSocket):
             print(names)
             for user in userList:
                 user.sendall(("j").encode('utf-8'))
-                user.shutdown(1)
+                time.sleep(.2)
                 user.sendall(name)
-                user.shutdown(1)
+                time(.2)
                 user.sendall(names)
         if sentence == 'm':
             print("Message Coming...")
