@@ -34,12 +34,11 @@ def Serve_User(connectionSocket):
         sentence = sentence.decode()
         if sentence == 'j':
             name = connectionSocket.recv(1024)
-            # welcome="<span>" + name.decode()+" Joined To Chat" + "</span>"
-            welcome=name.decode()
-            welcome=welcome.encode('utf-8')
+            # welcome=name.decode()
+            # welcome=welcome.encode('utf-8')
             for user in userList:
                 user.sendall(("j").encode('utf-8'))
-                user.sendall(welcome)
+                user.sendall(name)
         if sentence == 'm':
             print("Message Coming...")
             sentence = connectionSocket.recv(1024)
@@ -65,10 +64,11 @@ def Serve_User(connectionSocket):
             name = connectionSocket.recv(1024)
             userList.remove(connectionSocket)
             connectionSocket.close()
-            bye ="<span>" + name.decode() + " Left The Chat" + "</span>"
-            bye = bye.encode('utf-8')
+            # bye ="<span>" + name.decode() + " Left The Chat" + "</span>"
+            # bye = bye.encode('utf-8')
             for user in userList:
-                user.send(bye)
+                user.sendall(("c").encode('utf-8'))
+                user.send(name)
             print("Closing Connection...")
             connectionOpen = False
 
