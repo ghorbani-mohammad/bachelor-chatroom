@@ -144,7 +144,7 @@ class Window(QtGui.QMainWindow):
             modifiedSentence=conn.recv(1024)
             modifiedSentence=modifiedSentence.decode()
             if modifiedSentence=='j':
-                # print("Joined")
+                print("Joined")
                 name = conn.recv(1024)
                 names = conn.recv(1024)
                 names = names.decode()

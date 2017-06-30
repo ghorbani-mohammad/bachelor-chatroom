@@ -35,7 +35,9 @@ def Serve_User(connectionSocket):
         if sentence == 'j':
             name = connectionSocket.recv(1024)
             nameList.append(name)
+            print(len(nameList))
             names=','.join(nameList)
+            print(names)
             for user in userList:
                 user.sendall(("j").encode('utf-8'))
                 user.sendall(name)
