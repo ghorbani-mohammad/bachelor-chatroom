@@ -1,5 +1,6 @@
 from socket import *
 import _thread
+import time
 
 def Get_File(name,fileName):
     global userList
@@ -11,8 +12,14 @@ def Get_File(name,fileName):
     myFile.write(data)
     myFile.close()
     ftpconnectionSocket.close()
+    name=name.decode()
+    upMsg='<a href="'+fileName+'">' +fileName + ' --> Uploaded By --> '+ name + '</a>'
+    upMsg=upMsg.encode('utf-8')
+    print(name)
+    print(fileName)
     for user in userList:
-        user.send(('<a href="'+fileName+'">' +fileName + ' --> Uploaded By --> '+ name + '</a>').encode())
+        user.sendall(("u").encode('utf-8'))
+        user.send(upMsg)
     print('Successfully Getting Information')
 
 def Send_File(fileName):
@@ -24,8 +31,10 @@ def Send_File(fileName):
     print("Sending File Is Completed!")
 
 def Serve_User(connectionSocket):
+    print("Join To Serve User")
     global userList
     print(len(userList))
+    name='';
     connectionOpen=True
     while connectionOpen:
         sentence = connectionSocket.recv(1024)
@@ -34,23 +43,23 @@ def Serve_User(connectionSocket):
         sentence = sentence.decode()
         if sentence == 'j':
             name = connectionSocket.recv(1024)
-            welcome="<span>" + name.decode()+" Joined To Chat" + "</span>"
-            welcome=welcome.encode('utf-8')
+            print(name.decode())
             for user in userList:
                 user.sendall(("j").encode('utf-8'))
-                user.sendall(welcome)
+                user.sendall(name)
         if sentence == 'm':
             print("Message Coming...")
             sentence = connectionSocket.recv(1024)
             sentence = sentence.decode()
             print(sentence)
-            sentence = "<span>" + name + " -> " + sentence + "</span>"
+            sentence = "<span>" + name.decode() + " -> " + sentence + "</span>"
             sentence = sentence.encode('utf-8')
             for user in userList:
+                user.sendall(("m").encode('utf-8'))
                 user.send(sentence)
-        elif sentence == 'f':
+        elif sentence == 'u':
             print("File Coming...")
-            fileName = connectionSocket.recv(1024)
+            fileName = connectionSocket.recv(15)
             fileName = fileName.decode()
             print(fileName)
             try:
@@ -64,16 +73,15 @@ def Serve_User(connectionSocket):
             name = connectionSocket.recv(1024)
             userList.remove(connectionSocket)
             connectionSocket.close()
-            bye ="<span>" + name.decode() + " Left The Chat" + "</span>"
-            bye = bye.encode('utf-8')
             for user in userList:
-                user.send(bye)
+                user.sendall(("c").encode('utf-8'))
+                user.sendall(name)
             print("Closing Connection...")
             connectionOpen = False
 
-        elif sentence == 'fd':
+        elif sentence == 'd':
             print("Going To Send File To A User")
-            fileName = connectionSocket.recv(1024)
+            fileName = connectionSocket.recv(15)
             fileName = fileName.decode()
             print(fileName)
             try:
@@ -96,6 +104,7 @@ ftpServer.listen(1)
 print ('The server is ready to receive')
 
 userList=[]
+# nameList=[]
 while 1:
     connectionSocket, addr = serverSocket.accept()
     userList.append(connectionSocket)

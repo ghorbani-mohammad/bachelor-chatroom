@@ -35,7 +35,8 @@ class Window(QtGui.QMainWindow):
         else:
             sys.exit()
 
-        self.serverName = 'm-gh.info'
+        # self.serverName = 'm-gh.info'
+        self.serverName = 'localhost'
 
         self.serverPort = 12000
         self.clientSocket = socket(AF_INET, SOCK_STREAM)
@@ -69,7 +70,7 @@ class Window(QtGui.QMainWindow):
         self.textbox_Message.returnPressed.connect(self.Send_Message)
         self.textbox_Message.setPlaceholderText("Type Your Message Here....")
         f = self.textbox_Message.font()
-        f.setPointSize(18)
+        f.setPointSize(12)
         self.textbox_Message.setFont(f)
 
         self.textbox_Messages_box = QTextBrowser(self)
@@ -102,7 +103,13 @@ class Window(QtGui.QMainWindow):
         btn_Send_File.move(390,265)
         self.show()
 
+    def usrListUpdate(self):
+        # print("update")
+        self.userList.clear()
+
     def Join(self):
+        print("sending j")
+        time.sleep(.5)
         self.clientSocket.sendall(("j").encode('utf-8'))
         self.clientSocket.sendall(self.name.encode('utf-8'))
     
@@ -117,7 +124,7 @@ class Window(QtGui.QMainWindow):
         print("Sending File....")
         fileName = QFileDialog.getOpenFileName(self, 'Choose a TXT File','',"Text Files (*.txt)")
         
-        self.clientSocket.sendall(("f").encode('utf-8'))
+        self.clientSocket.sendall(("u").encode('utf-8'))
         fileName=os.path.basename(fileName)#Getting Pure File Name
         self.clientSocket.sendall(fileName.encode('utf-8'))
         try:
@@ -140,23 +147,44 @@ class Window(QtGui.QMainWindow):
         
     
     def Getting_Messages(self,conn):
+        time.sleep(.5)
         while 1:
-            modifiedSentence=conn.recv(1024)
-            modifiedSentence=modifiedSentence.decode()
-            if modifiedSentence=='j':
+            event=conn.recv(1)
+            event=event.decode()
+            print("Getting Messages: "+event)
+            if event=='j':
                 print("Joined")
+                name = conn.recv(10)
+                name = name.decode()
+                welcome="<span style=\"color:red;\">" + name+" Joined To Chat" + "</span>"
+                while self.textbox_Messages_box is None:
+                    print("not created")
+                self.textbox_Messages_box.append(welcome + '\n')
+            elif event=='c':
+                name = conn.recv(10)
+                name = name.decode()
+                bye = "<span style=\"color:brown;\">" + name + " Left The Chat" + "</span>"
+                self.textbox_Messages_box.append(bye + '\n')
+            elif event=='m':
+                message=conn.recv(100)
+                message=message.decode()
+                self.textbox_Messages_box.append(message + '\n')
+            elif event=='u':
+                message=conn.recv(100)
+                message=message.decode()
+                self.textbox_Messages_box.append(message + '\n')
             else:
-                self.textbox_Messages_box.append(modifiedSentence+'\n')
+                time.sleep(.5)
+                self.textbox_Messages_box.append(event+'\n')
 
     def downFile(self,url):
         url=str(url.toString())
-        # print(url)
         print("anchor clicked!")
         fileName = QFileDialog.getSaveFileName(self, 'Determining A Path For Saving TXT File', '', "Text Files (*.txt)")
         fileName = os.path.basename(fileName)  # Getting Pure File Name
         print(fileName)
 
-        self.clientSocket.sendall(("fd").encode('utf-8'))
+        self.clientSocket.sendall(("d").encode('utf-8'))
         self.clientSocket.sendall(url.encode('utf-8'))
         try:
             _thread.start_new_thread(self.Get_File, (fileName,))
@@ -174,17 +202,17 @@ class Window(QtGui.QMainWindow):
         print(data)
         self.clientSocketFTP.close()
         print("Ftp Connection Is Closed!")
-        # QtGui.QMessageBox.information(None,"Succssful Operation","Downloading File Is Complete!")
+        QtGui.QMessageBox.information(None,"Succssful Operation","Downloading File Is Complete!")
 
-        msgBox = QtGui.QMessageBox()
-        msgBox.setIcon(QtGui.QMessageBox.Information)
-        msgBox.setText("Do not stare into laser with remaining eye")
-        # msgBox.setWindowIcon(QtGui.QIcon('icon.png'))
-
-        msgBox.addButton(QtGui.QMessageBox.Ok)
-
-        msgBox.setDefaultButton(QtGui.QMessageBox.Ok)
-        ret = msgBox.exec_()
+        # msgBox = QtGui.QMessageBox()
+        # msgBox.setIcon(QtGui.QMessageBox.Information)
+        # msgBox.setText("Do not stare into laser with remaining eye")
+        # # msgBox.setWindowIcon(QtGui.QIcon('icon.png'))
+        #
+        # msgBox.addButton(QtGui.QMessageBox.Ok)
+        #
+        # msgBox.setDefaultButton(QtGui.QMessageBox.Ok)
+        # ret = msgBox.exec_()
 
     def closeEvent(self,event):
         print("\nClosing...\n")
