@@ -32,7 +32,7 @@ def Send_File(fileName):
 
 def Serve_User(connectionSocket):
     print("Join To Serve User")
-    global userList
+    global userList,nameList
     print(len(userList))
     name='';
     connectionOpen=True
@@ -43,10 +43,14 @@ def Serve_User(connectionSocket):
         sentence = sentence.decode()
         if sentence == 'j':
             name = connectionSocket.recv(1024)
+            nameList.append(name.decode())
+            names = ','.join(nameList)
             print(name.decode())
+            print(names)
+            names=names.encode('utf-8')
             for user in userList:
                 user.sendall(("j").encode('utf-8'))
-                user.sendall(name)
+                user.sendall(names)
         if sentence == 'm':
             print("Message Coming...")
             sentence = connectionSocket.recv(1024)
@@ -68,14 +72,20 @@ def Serve_User(connectionSocket):
             except:
                 print("Unable To Start New Thread")
 
-        elif sentence=='c':
+        elif sentence=='q':
             print("Going To Remove User From List")
-            name = connectionSocket.recv(1024)
+            name = connectionSocket.recv(10)
+            name=name.decode()
+            i=nameList.index(name)
+            nameList[0],nameList[i]=nameList[i],nameList[0]
+            names = ','.join(nameList)
             userList.remove(connectionSocket)
+            nameList.remove(name)
             connectionSocket.close()
+            names=names.encode('utf-8')
             for user in userList:
-                user.sendall(("c").encode('utf-8'))
-                user.sendall(name)
+                user.sendall(("q").encode('utf-8'))
+                user.sendall(names)
             print("Closing Connection...")
             connectionOpen = False
 
@@ -104,7 +114,7 @@ ftpServer.listen(1)
 print ('The server is ready to receive')
 
 userList=[]
-# nameList=[]
+nameList=[]
 while 1:
     connectionSocket, addr = serverSocket.accept()
     userList.append(connectionSocket)

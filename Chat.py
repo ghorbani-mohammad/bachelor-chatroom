@@ -12,9 +12,14 @@ from socket import *
 
 
 class Window(QtGui.QMainWindow):
-    
+    clearUserList = pyqtSignal()
     def __init__(self):
         self.chatRoomWindow()
+
+    def handle_clearUserList(self):
+        print("User List Clearing")
+        self.userList.clear()
+        print("User List Cleared")
 
     def chatRoomWindow(self):
         super(Window, self).__init__()
@@ -34,6 +39,9 @@ class Window(QtGui.QMainWindow):
             print(self.name)
         else:
             sys.exit()
+
+
+        self.clearUserList.connect(self.handle_clearUserList)
 
         # self.serverName = 'm-gh.info'
         self.serverName = 'localhost'
@@ -88,6 +96,7 @@ class Window(QtGui.QMainWindow):
         self.userList.setReadOnly(True)
         self.userList.move(390, 5)
         self.userList.resize(100, 220)
+        # self.userList.clear()
 
         self.centerOnScreen()
         self.home()
@@ -103,16 +112,13 @@ class Window(QtGui.QMainWindow):
         btn_Send_File.move(390,265)
         self.show()
 
-    def usrListUpdate(self):
-        # print("update")
-        self.userList.clear()
 
     def Join(self):
         print("sending j")
         time.sleep(.5)
         self.clientSocket.sendall(("j").encode('utf-8'))
         self.clientSocket.sendall(self.name.encode('utf-8'))
-    
+
     def Send_Message(self):
         self.clientSocket.sendall(("m").encode('utf-8'))
         sentence=self.textbox_Message.text()
@@ -123,15 +129,16 @@ class Window(QtGui.QMainWindow):
     def Select_File(self):
         print("Sending File....")
         fileName = QFileDialog.getOpenFileName(self, 'Choose a TXT File','',"Text Files (*.txt)")
-        
-        self.clientSocket.sendall(("u").encode('utf-8'))
-        fileName=os.path.basename(fileName)#Getting Pure File Name
-        self.clientSocket.sendall(fileName.encode('utf-8'))
-        try:
-            _thread.start_new_thread(self.Send_file,(fileName,))
-            print("Thread Created")
-        except:
-            print("Unable To Start New Thread")
+        # if !fileName.isEmpty && !fileName.isNull():
+        if fileName:
+            self.clientSocket.sendall(("u").encode('utf-8'))
+            fileName=os.path.basename(fileName)#Getting Pure File Name
+            self.clientSocket.sendall(fileName.encode('utf-8'))
+            try:
+                _thread.start_new_thread(self.Send_file,(fileName,))
+                print("Thread Created")
+            except:
+                print("Unable To Start New Thread")
 
     def Send_file(self,fileName):
         self.clientSocketFTP = socket(AF_INET, SOCK_STREAM)
@@ -144,8 +151,8 @@ class Window(QtGui.QMainWindow):
         time.sleep(.5)
         self.clientSocketFTP.close()
         print("Ftp Connection Is Closed!")
-        
-    
+
+
     def Getting_Messages(self,conn):
         time.sleep(.5)
         while 1:
@@ -154,17 +161,26 @@ class Window(QtGui.QMainWindow):
             print("Getting Messages: "+event)
             if event=='j':
                 print("Joined")
-                name = conn.recv(10)
-                name = name.decode()
+                self.clearUserList.emit()
+                names = conn.recv(50)
+                names = names.decode()
+                names = names.split(',')
+                print(names)
+                name=names[-1]
                 welcome="<span style=\"color:red;\">" + name+" Joined To Chat" + "</span>"
-                while self.textbox_Messages_box is None:
-                    print("not created")
                 self.textbox_Messages_box.append(welcome + '\n')
-            elif event=='c':
-                name = conn.recv(10)
-                name = name.decode()
+                for name in names:
+                    self.userList.append(name)
+            elif event=='q':
+                self.clearUserList.emit()
+                names = conn.recv(50)
+                names = names.decode()
+                names = names.split(',')
+                name = names[0]
                 bye = "<span style=\"color:brown;\">" + name + " Left The Chat" + "</span>"
                 self.textbox_Messages_box.append(bye + '\n')
+                for name in names[1:]:
+                    self.userList.append(name)
             elif event=='m':
                 message=conn.recv(100)
                 message=message.decode()
@@ -181,16 +197,17 @@ class Window(QtGui.QMainWindow):
         url=str(url.toString())
         print("anchor clicked!")
         fileName = QFileDialog.getSaveFileName(self, 'Determining A Path For Saving TXT File', '', "Text Files (*.txt)")
-        fileName = os.path.basename(fileName)  # Getting Pure File Name
-        print(fileName)
+        if fileName:
+            fileName = os.path.basename(fileName)  # Getting Pure File Name
+            print(fileName)
 
-        self.clientSocket.sendall(("d").encode('utf-8'))
-        self.clientSocket.sendall(url.encode('utf-8'))
-        try:
-            _thread.start_new_thread(self.Get_File, (fileName,))
-            print("Thread Created")
-        except:
-            print("Unable To Start New Thread")
+            self.clientSocket.sendall(("d").encode('utf-8'))
+            self.clientSocket.sendall(url.encode('utf-8'))
+            try:
+                _thread.start_new_thread(self.Get_File, (fileName,))
+                print("Thread Created")
+            except:
+                print("Unable To Start New Thread")
 
     def Get_File(self,fileName):
         self.clientSocketFTP = socket(AF_INET, SOCK_STREAM)
@@ -216,10 +233,8 @@ class Window(QtGui.QMainWindow):
 
     def closeEvent(self,event):
         print("\nClosing...\n")
-        self.clientSocket.sendall(("c").encode('utf-8'))
-        time.sleep(.5)
+        self.clientSocket.sendall(("q").encode('utf-8'))
         self.clientSocket.sendall(self.name.encode('utf-8'))
-        # event.ignore()
         sys.exit()
 
     def centerOnScreen (self):
