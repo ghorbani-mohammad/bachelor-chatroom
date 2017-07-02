@@ -115,13 +115,18 @@ class Window(QtGui.QMainWindow):
 
     def Join(self):
         print("sending j")
-        time.sleep(.5)
         self.clientSocket.sendall(("j").encode('utf-8'))
+        size=len(self.name)
+        size="{:<5}".format(size)
+        self.clientSocket.sendall(size.encode('utf-8'))
         self.clientSocket.sendall(self.name.encode('utf-8'))
 
     def Send_Message(self):
         self.clientSocket.sendall(("m").encode('utf-8'))
         sentence=self.textbox_Message.text()
+        size = len(sentence)
+        size = "{:<5}".format(size)
+        self.clientSocket.sendall(size.encode('utf-8'))
         self.textbox_Message.setText("")
         print(sentence)
         self.clientSocket.sendall(sentence.encode('utf-8'))
@@ -133,6 +138,9 @@ class Window(QtGui.QMainWindow):
         if fileName:
             self.clientSocket.sendall(("u").encode('utf-8'))
             fileName=os.path.basename(fileName)#Getting Pure File Name
+            size = len(fileName)
+            size = "{:<5}".format(size)
+            self.clientSocket.sendall(size.encode('utf-8'))
             self.clientSocket.sendall(fileName.encode('utf-8'))
             try:
                 _thread.start_new_thread(self.Send_file,(fileName,))
@@ -146,7 +154,10 @@ class Window(QtGui.QMainWindow):
         file=open(fileName,'rb')
         l = file.read()
         file.close()
-        print(l)
+        # print(l)
+        size = len(l)
+        size = "{:<5}".format(size)
+        self.clientSocketFTP.sendall(size.encode('utf-8'))
         self.clientSocketFTP.sendall(l)
         time.sleep(.5)
         self.clientSocketFTP.close()
@@ -162,7 +173,10 @@ class Window(QtGui.QMainWindow):
             if event=='j':
                 print("Joined")
                 self.clearUserList.emit()
-                names = conn.recv(50)
+                size = conn.recv(5)
+                size = size.decode()
+                size = int(size)
+                names = conn.recv(size)
                 names = names.decode()
                 names = names.split(',')
                 print(names)
@@ -173,7 +187,10 @@ class Window(QtGui.QMainWindow):
                     self.userList.append(name)
             elif event=='q':
                 self.clearUserList.emit()
-                names = conn.recv(50)
+                size = conn.recv(5)
+                size = size.decode()
+                size = int(size)
+                names = conn.recv(size)
                 names = names.decode()
                 names = names.split(',')
                 name = names[0]
@@ -182,11 +199,17 @@ class Window(QtGui.QMainWindow):
                 for name in names[1:]:
                     self.userList.append(name)
             elif event=='m':
-                message=conn.recv(100)
+                size = conn.recv(5)
+                size = size.decode()
+                size = int(size)
+                message=conn.recv(size)
                 message=message.decode()
                 self.textbox_Messages_box.append(message + '\n')
             elif event=='u':
-                message=conn.recv(100)
+                size = conn.recv(5)
+                size = size.decode()
+                size = int(size)
+                message=conn.recv(size)
                 message=message.decode()
                 self.textbox_Messages_box.append(message + '\n')
             else:
@@ -202,6 +225,9 @@ class Window(QtGui.QMainWindow):
             print(fileName)
 
             self.clientSocket.sendall(("d").encode('utf-8'))
+            size = len(fileName)
+            size = "{:<5}".format(size)
+            self.clientSocket.sendall(size.encode('utf-8'))
             self.clientSocket.sendall(url.encode('utf-8'))
             try:
                 _thread.start_new_thread(self.Get_File, (fileName,))
@@ -212,7 +238,10 @@ class Window(QtGui.QMainWindow):
     def Get_File(self,fileName):
         self.clientSocketFTP = socket(AF_INET, SOCK_STREAM)
         self.clientSocketFTP.connect((self.serverName, self.serverPortFTP))
-        data = self.clientSocketFTP.recv(1024)
+        size = self.clientSocketFTP.recv(5)
+        size = size.decode()
+        size = int(size)
+        data = self.clientSocketFTP.recv(size)
         myFile = open(fileName, "wb+")
         myFile.write(data)
         myFile.close()
@@ -221,20 +250,9 @@ class Window(QtGui.QMainWindow):
         print("Ftp Connection Is Closed!")
         QtGui.QMessageBox.information(None,"Succssful Operation","Downloading File Is Complete!")
 
-        # msgBox = QtGui.QMessageBox()
-        # msgBox.setIcon(QtGui.QMessageBox.Information)
-        # msgBox.setText("Do not stare into laser with remaining eye")
-        # # msgBox.setWindowIcon(QtGui.QIcon('icon.png'))
-        #
-        # msgBox.addButton(QtGui.QMessageBox.Ok)
-        #
-        # msgBox.setDefaultButton(QtGui.QMessageBox.Ok)
-        # ret = msgBox.exec_()
-
     def closeEvent(self,event):
         print("\nClosing...\n")
         self.clientSocket.sendall(("q").encode('utf-8'))
-        self.clientSocket.sendall(self.name.encode('utf-8'))
         sys.exit()
 
     def centerOnScreen (self):

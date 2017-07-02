@@ -6,7 +6,10 @@ def Get_File(name,fileName):
     global userList
     print('Thread with file name: '+fileName)
     ftpconnectionSocket,addr=ftpServer.accept()
-    data = ftpconnectionSocket.recv(1024)
+    size = ftpconnectionSocket.recv(5)
+    size = size.decode()
+    size = int(size)
+    data = ftpconnectionSocket.recv(size)
     print(data.decode())
     myFile=open(fileName,"wb+")
     myFile.write(data)
@@ -15,11 +18,13 @@ def Get_File(name,fileName):
     name=name.decode()
     upMsg='<a href="'+fileName+'">' +fileName + ' --> Uploaded By --> '+ name + '</a>'
     upMsg=upMsg.encode('utf-8')
-    print(name)
-    print(fileName)
+    size = len(upMsg)
+    size = "{:<5}".format(size)
     for user in userList:
         user.sendall(("u").encode('utf-8'))
-        user.send(upMsg)
+        user.sendall(size.encode('utf-8'))
+        user.sendall(upMsg)
+        time.sleep(.5)
     print('Successfully Getting Information')
 
 def Send_File(fileName):
@@ -27,54 +32,66 @@ def Send_File(fileName):
     file = open(fileName, 'rb')
     l = file.read()
     file.close()
+    size = len(l)
+    size = "{:<5}".format(size)
+    ftpconnectionSocket.sendall(size.encode('utf-8'))
     ftpconnectionSocket.sendall(l)
     print("Sending File Is Completed!")
 
 def Serve_User(connectionSocket):
     print("Join To Serve User")
     global userList,nameList
-    print(len(userList))
     name='';
     connectionOpen=True
     while connectionOpen:
-        sentence = connectionSocket.recv(1024)
+        sentence = connectionSocket.recv(1)
         if not sentence:
             print("Connection Is Closed")
         sentence = sentence.decode()
         if sentence == 'j':
-            name = connectionSocket.recv(1024)
+            size=connectionSocket.recv(5)
+            size=size.decode()
+            size=int(size)
+            name = connectionSocket.recv(size)
             nameList.append(name.decode())
             names = ','.join(nameList)
-            print(name.decode())
-            print(names)
+            print("name: "+name.decode())
+            print("names: "+names)
             names=names.encode('utf-8')
+            size = len(names)
+            size = "{:<5}".format(size)
             for user in userList:
                 user.sendall(("j").encode('utf-8'))
+                user.sendall(size.encode('utf-8'))
                 user.sendall(names)
         if sentence == 'm':
-            print("Message Coming...")
-            sentence = connectionSocket.recv(1024)
+            size = connectionSocket.recv(5)
+            size = size.decode()
+            size = int(size)
+            sentence = connectionSocket.recv(size)
             sentence = sentence.decode()
             print(sentence)
             sentence = "<span>" + name.decode() + " -> " + sentence + "</span>"
             sentence = sentence.encode('utf-8')
+            size = len(sentence)
+            size = "{:<5}".format(size)
             for user in userList:
                 user.sendall(("m").encode('utf-8'))
+                user.sendall(size.encode('utf-8'))
                 user.send(sentence)
         elif sentence == 'u':
-            print("File Coming...")
-            fileName = connectionSocket.recv(15)
+            size = connectionSocket.recv(5)
+            size = size.decode()
+            size = int(size)
+            fileName = connectionSocket.recv(size)
             fileName = fileName.decode()
-            print(fileName)
             try:
                 _thread.start_new_thread(Get_File, (name,fileName,))
-                print("Thread Created")
             except:
                 print("Unable To Start New Thread")
 
         elif sentence=='q':
             print("Going To Remove User From List")
-            name = connectionSocket.recv(10)
             name=name.decode()
             i=nameList.index(name)
             nameList[0],nameList[i]=nameList[i],nameList[0]
@@ -83,15 +100,21 @@ def Serve_User(connectionSocket):
             nameList.remove(name)
             connectionSocket.close()
             names=names.encode('utf-8')
+            size = len(names)
+            size = "{:<5}".format(size)
             for user in userList:
                 user.sendall(("q").encode('utf-8'))
+                user.sendall(size.encode('utf-8'))
                 user.sendall(names)
             print("Closing Connection...")
             connectionOpen = False
 
         elif sentence == 'd':
             print("Going To Send File To A User")
-            fileName = connectionSocket.recv(15)
+            size = connectionSocket.recv(5)
+            size = size.decode()
+            size = int(size)
+            fileName = connectionSocket.recv(size)
             fileName = fileName.decode()
             print(fileName)
             try:
